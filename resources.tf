@@ -14,6 +14,8 @@ resource "docker_volume" "data-vol" {
 }
 
 resource "docker_container" "bgg-database" {
+  name = "my-sgp-bgg-database"
+  image = docker_container.bgg-backend.image_id
   networks_advanced {
     name = docker_network.bgg-net.id
   }
@@ -30,7 +32,6 @@ resource "docker_container" "bgg-database" {
 
 }
 
-
 resource "docker_container" "bgg-backend" {
   count = var.backend_instance_count
   name  = "my-sgp-bgg-backend-${count.index}"
@@ -43,7 +44,7 @@ resource "docker_container" "bgg-backend" {
     "BGG_DB_PASSWORD=changeit",
     "BGG_DB_HOST=${docker_container.bgg-database.name}"
   ]
-  ports = {
+  ports {
     internal = 3000
   }
 }
@@ -94,9 +95,13 @@ resource "digitalocean_droplet" "nginx" {
 
 }
 
-#Provision nginx to the different docker images
-resource "local_file" "root_at_nginx" {
-    filename = "root@${digitalocean_droplet.nginx.ipv4_address}"
-    content = ""
-    file_permission = "0444"
+#Provision nginx to the different docker
+resource "local_file" "nginx-conf" {
+  filename = "nginx.conf"
+  content = templatefile("nginx-conf.tftpl",
+    {
+      docker_host = var.docker_host,
+      ports       = docker_container.bgg_backend[*].ports[*]
+    }
+  ) #Rendering a file in slide 59
 }
