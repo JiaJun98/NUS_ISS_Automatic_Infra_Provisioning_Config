@@ -1,0 +1,42 @@
+This is the README file for my IAC assignment
+
+
+Task 4
+
+sudo adduser fred
+sudo usermod -aG docker fred
+sudo usermod -aG sudo fred
+su - fred
+groups
+sudo whoami
+
+Task 5
+sudo su - fred
+ssh-keygen -t rsa -b 4096 -C "gohjiajun@gmail.com"
+
+mkdir -p ~/.ssh
+chmod 700 ~/.ssh
+cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+chmod 600 ~/.ssh/authorized_keys
+sudo chown -R fred:fred ~/.ssh
+
+Task 6
+mkdir iac_assignment
+cd iac_assignment
+
+git init
+echo "This is the README file for my IAC assignment" > readme.txt
+git add "readme.txt"
+git commit -m "Adding inital readme"
+git branch -M main
+git remote add origin git@github.com:JiaJun98/NUS_ISS_Automatic_Infra_Provisioning_Config.git
+git push -u origin main
+
+Task 11
+sudo su - fred
+
+#Download the instructor public key from https://bit.ly/aipc_pubkey
+cat /<file you need> >> ~/.ssh/authorized_keys
+chmod 600 ~/.ssh/authorized_keys
+#Verify
+cat ~/.ssh/authorized_keys
