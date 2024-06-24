@@ -30,3 +30,5 @@ provider "docker" {
 provider "digitalocean" {
   token = var.do_token
 }
+
+provider local { }
