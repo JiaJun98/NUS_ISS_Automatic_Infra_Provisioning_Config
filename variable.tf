@@ -1,5 +1,6 @@
 # Set the variable value in *.tfvars file
 # or using -var="do_token=..." CLI option
+
 variable "do_token" {
     description = "DO TOKEN"
     type = string
@@ -10,19 +11,19 @@ variable "docker_host" {
     type = string
 }
 
-variable "docker_cert_path"{ 
-    type = string
+variable "docker_cert_path" {
+    type = string 
     sensitive = true
 }
 
 variable backend_version {
     type = string
-    default = "v3.1"
+    default = "v3"
 }
 
 variable database_version {
     type = string
-    default = "v3"
+    default = "v3.1"
 }
 
 variable backend_instance_count {
@@ -31,8 +32,7 @@ variable backend_instance_count {
 }
 
 #Better to create variables... dont modify it manually
-
-#Region, Image
+#Region, Image, Size
 
 variable do_region {
     type = string
