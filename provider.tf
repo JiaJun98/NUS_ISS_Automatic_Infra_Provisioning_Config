@@ -18,9 +18,10 @@ terraform {
 }
 
 provider "docker" {
-    host = "tcp://${var.docker_host}:2376" #Temporary #Certificate provider
-    cert_path = var.docker_cert_path
-}
+    host = "tcp://${var.docker_host}:2376" #Temporary
+    cert_path = var.docker_cert_path #Certificate provider
+} 
+
 
 # Configure the DigitalOcean Provider
 provider "digitalocean" {
