@@ -1,0 +1,68 @@
+- name: Install Code Server
+  hosts: all
+  vars:
+    cs_archive: https://github.com/coder/code-server/releases/download/v4.9.1/code-server-4.9.1-linux-amd64.tar.gz
+    cs_dir: /usr/local/opt
+    cs_unpacked: code-server-4.90.3-linux-amd64
+  tasks: #There is package level update and distribution level update. We will do package level
+  - name: Update OS
+    apt:
+      update_cache: yes
+      upgrade: yes
+  - name: Create directories
+    file:
+      path: "{{ item }}"
+      state: directory
+      mode: "0755"
+    loop:
+      - "{{ cs_dir }}"
+      - /var/lib/code-server
+  - name : Download and unpack Code Server
+    unarchive:
+      url: "{{ cs_archive }}"
+      dest: "{{ cs_dir }}"
+      remote_src : yes
+    when: not dir.stats.exists #Check if the infrastructure exists
+  - name: link directory and binary
+    file :
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+      state: link
+    loop:
+      - src: "{{ cs_dir }}/{{ cs_unpacked }}"
+        dest: /usr/local/bin/code-server" 
+      - src: "{{ cs_dir }}/{{ cs_unpacked }}bin/code-server"
+        dest: "/usr/bin/code-server"
+  - name: Generate code server service
+    template:
+      src: code-server.service.j2
+      dest: /etc/systemd/system/code-server.service
+  - name : Enable code server service
+    systemd:
+      name: code-server
+      daemon_reload: yes
+      enabled: yes
+      state: started
+
+- name: Install nginx
+  hosts: all
+  task: 
+    - name: Install nginx
+      apt:
+        name: nginx
+        state: present
+    - name: Generate code-server.conf
+      template:
+        src: code-server.conf.j2
+        dest: /etc/nginx/sites-available/code-server.conf
+    - name: Link code-server.conf to sites-enabled #Linking again
+      file:
+        src: /etc/nginx/sites-available/code-server.conf
+        dest: /etc/nginx/sites-enabled/code-server.conf
+        state: link
+    - name: Restart nginx systemd
+      systemd:
+        name: nginx
+        daemon_reload: yes
+        enabled: yes
+        state: restarted
