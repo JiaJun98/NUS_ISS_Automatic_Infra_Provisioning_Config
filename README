@@ -57,7 +57,9 @@ cat ~/.ssh/authorized_keys
 
 6. ensure your have the necessary DO_TOKEN defined as global environment variable.
 ```
-export DO_TOKEN=<DO TOKEN>
+nano ~/.bashrc
+export DO_TOKEN=<DO TOKEN> #This is the Personal Access Token
+source ~/.bashrc
 ```
 
 7. Perform a terraform plan.
