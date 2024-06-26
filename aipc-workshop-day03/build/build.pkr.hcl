@@ -4,7 +4,7 @@ source digitalocean codeserver {
     region = var.do_region
     size = var.do_size
     ssh_username = "root"
-    snapshot_name = "codeserver"
+    snapshot_name = "codeserver" #Reference the download name
 }
 
 build {
@@ -14,6 +14,6 @@ build {
 
     provisioner ansible {
         playbook_file = "playbook.yaml"
-	extra_arguments = [ "--scp-extra-args", "'-O'" ]
+	extra_arguments = ["-vvvv", "--scp-extra-args", "'-O'", "--ssh-extra-args", "-o IdentitiesOnly=yes -o HostKeyAlgorithms=+ssh-rsa -o PubkeyAcceptedKeyTypes=+ssh-rsa"] #Work around suggested by the forums
     }
 }
