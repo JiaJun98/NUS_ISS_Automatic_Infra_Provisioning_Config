@@ -1,6 +1,6 @@
 #### Pre-installation
 
-############ Installing Terraform ############
+### Installing Terraform
 
 ssh-keygen
 
@@ -15,7 +15,7 @@ sudo apt update && sudo apt install terraform
 terraform --version
 
 
-### Steps
+### Steps for Day 1
 
 1. add the providers in provider.tf
 
@@ -56,8 +56,8 @@ http://<nginx_ip>:80/
 terraform destroy -var "do_token=${DO_TOKEN}" -var "ssh_private_key=/root/.ssh/id_rsa" -var "docker_host=<docker host ip>" -var "docker_cert_path=/root/.docker/machine/machines/docker-nginx"
 ```
 
+#### Day 2
 
-Day 2
 #### Follow the guide here
 https://github.com/kenken64/NUSISS-DevOpsEng/blob/master/workshop/workshop3-1.md
 
@@ -75,4 +75,43 @@ Make sure control server and images is ubuntu 20.04
 sudo apt-add-repository ppa:ansible/ansible
 sudo apt update
 sudo apt install ansible-core
+```
+
+## Install packer on ubuntu 20.04 x86
+
+```
+curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+```
+
+````
+sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+````
+
+```
+sudo apt-get update && sudo apt-get install packer
+```
+
+## Initialize packer project
+
+```
+packer init config.pkr.hcl
+```
+
+## Build the packer golden image
+```
+packer build --var do_token=${DO_PAT} .
+```
+
+## Terraform provisioning
+
+```
+terraform init
+```
+
+```
+terraform plan -var "do_token=${DO_PAT}" -var "ssh_private_key=/root/.ssh/id_rsa" -var "cs_password=password123456" -var "cs_domain=test"
+```
+
+```
+terraform apply --auto-approve-var "do_token=${DO_PAT}" -var "ssh_private_key=/root/.ssh/id_rsa" -var "cs_passwword=password123456" -var "cs_domain=test"
 ```
