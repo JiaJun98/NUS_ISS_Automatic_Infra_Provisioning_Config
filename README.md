@@ -2,6 +2,7 @@
 
 ### Installing Terraform
 
+```
 ssh-keygen
 
 cat ~/.ssh/id_rsa.pub
@@ -13,7 +14,7 @@ echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://
 sudo apt update && sudo apt install terraform
 
 terraform --version
-
+```
 
 ### Steps for Day 1
 
@@ -61,11 +62,14 @@ terraform destroy -var "do_token=${DO_TOKEN}" -var "ssh_private_key=/root/.ssh/i
 #### Follow the guide here
 https://github.com/kenken64/NUSISS-DevOpsEng/blob/master/workshop/workshop3-1.md
 
+ ```
 terraform plan -var "do_token=${DO_PAT}" -var "ssh_private_key=/root/.ssh/id_rsa" -var "codeserver_password=password123456"
 
 terraform apply -auto-approve -var "do_token=${DO_PAT}" -var "ssh_private_key=/root/.ssh/id_rsa" -var "codeserver_password=password123456"
 
 ansible-playbook playbook.yml -i inventory.yaml
+```
+
 
 #### Day 3
 
